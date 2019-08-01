@@ -1,0 +1,24 @@
+---
+title: Tags
+layout: default
+---
+
+{% include header.html %}
+
+<div class="g-banner tags-banner {{ site.postPatterns | prepend: 'post-pattern-' }} {{ site.theme-color | prepend: 'bgcolor-' }}" data-theme="{{ site.theme-color }}">
+    <h2>RESOURCES</h2>
+</div>
+
+<main class="tags-content">
+
+    <ul class="tags-list">
+        
+        {% for resource in site.resources %}
+        <li>
+            <a class="tag-name" href="{{ resource[1] | relative_url }}" title="{{ resource[0] }}">{{ resource[0] }}</a>
+        </li>
+        {% endfor%}
+    </ul>
+</main>
+    
+{% include footer.html %}

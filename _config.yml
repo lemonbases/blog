@@ -19,6 +19,7 @@ nav:
   home: '/'
   tags: '/tags.html'
   resources: '/resources.html'
+  about: '/2019/09/19/about-us.html'
 
 # Footer
 footer:
@@ -87,3 +88,4 @@ plugins: [jekyll-paginate]
 # resources
 resources:
   scRNA-seq-data-analysis: '/scRNA.seq.course.CN'
+  Snakemake中文文档: '/Snakemake.CN'

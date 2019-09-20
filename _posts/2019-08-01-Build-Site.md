@@ -3,7 +3,7 @@ layout: post
 title: 'jekyll, gitpage搭建博客'
 date: 2019-08-01
 author: feifei
-tags: gitpage jekyll
+tags: 网站运维
 ---
 
 > 使用jekyll, gitpage搭建博客

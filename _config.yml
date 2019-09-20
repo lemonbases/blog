@@ -59,6 +59,8 @@ postPatterns: 'food'
 sns:
   weibo: '//weibo.com/u/7189209185'
   github: '//github.com/lemonbases'
+  author : 'https://mp.weixin.qq.com/s/gyJItQa4D-FPjZ0-yfSNOw'
+
 
 # Tags 设置标签
 recommend-tags: true # whether or not display recommend-tags on the sidebar

@@ -90,4 +90,4 @@ plugins: [jekyll-paginate]
 # resources
 resources:
   scRNA-seq-data-analysis: '/scRNA.seq.course.CN'
-  Snakemake中文文档: '/Snakemake.CN'
+  Snakemake中文文档: 'https://snakemakecn.readthedocs.io/zh_CN/latest/'

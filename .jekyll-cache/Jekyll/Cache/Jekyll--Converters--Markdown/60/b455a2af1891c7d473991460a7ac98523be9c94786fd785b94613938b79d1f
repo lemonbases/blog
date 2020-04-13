@@ -1,0 +1,107 @@
+I"�<blockquote>
+  <p>了解Linux系统下文件权限及管理</p>
+</blockquote>
+
+<p>在<a href="https://lemonbases.github.io/2019/09/19/Linux-basic-04directory-operation.html">Linux-基础-04目录管理</a>中，我们学习了<code class="highlighter-rouge">ls</code>命令可以用来显示目录内容。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">ls</span> <span class="nt">-l</span>
+
+total 8
+<span class="nt">-rw-r--r--</span> 2 learn-linux learn-linux 19 9月  17 11:41 hl_test.txt
+lrwxrwxrwx 1 learn-linux learn-linux  8 9月  17 11:40 sl_test.txt -&gt; test.txt
+<span class="nt">-rw-r--r--</span> 2 learn-linux learn-linux 19 9月  17 11:41 test.txt
+</code></pre></div></div>
+
+<p>第一个字段描述文件和目录权限的编码，第一个字符表示对象类型：</p>
+
+<ul>
+  <li><code class="highlighter-rouge">-</code>代表文件</li>
+  <li><code class="highlighter-rouge">d</code>代表目录</li>
+  <li><code class="highlighter-rouge">l</code>代表链接</li>
+  <li><code class="highlighter-rouge">c</code>代表字符型设备</li>
+  <li><code class="highlighter-rouge">b</code>代表块设备</li>
+  <li><code class="highlighter-rouge">n</code>代表网络设备</li>
+</ul>
+
+<p>之后有3组三字符的编码，共9位，每一组定义了3种访问权限：</p>
+
+<ul>
+  <li><code class="highlighter-rouge">r</code>代表可读</li>
+  <li><code class="highlighter-rouge">w</code>代表可写</li>
+  <li><code class="highlighter-rouge">x</code>代表可执行</li>
+</ul>
+
+<p>若没有对应权限，用<code class="highlighter-rouge">-</code>表示。</p>
+
+<p><img src="https://ae01.alicdn.com/kf/H88eb0f8a93234430abd2f83cb36c3bd9O.png" alt="linux-file-permission.png" /></p>
+
+<p>权限的8进制表示：</p>
+
+<p><strong>r ：4， w：2，x：1，-：0</strong></p>
+
+<p><img src="https://ae01.alicdn.com/kf/H5e273635b251460a81ceb16e7568c51aM.png" alt="linux-file-permission-8bits.png" /></p>
+
+<h3 id="chmod-权限更改">chmod 权限更改</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">chmod </span>options mode file
+</code></pre></div></div>
+
+<p>mode参数可以使用八进制模式或符号模式进行安全设置</p>
+
+<h4 id="八进制模式">八进制模式</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">chmod </span>760 test.txt
+<span class="nb">ls</span> <span class="nt">-l</span> test.txt
+
+<span class="nt">-rwxrw----</span> 2 learn-linux learn-linux 19 9月  17 11:41 test.txt
+</code></pre></div></div>
+
+<h4 id="符号模式">符号模式</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">chmod</span> <span class="o">[</span>ugoa] <span class="o">[[</span>+-<span class="o">=][</span>rwx...]]
+</code></pre></div></div>
+
+<ul>
+  <li>u：文件所有者</li>
+  <li>g：同组用户</li>
+  <li>o：其它用户</li>
+  <li>a：上述所有</li>
+</ul>
+
+<p>后面的符号代表在现有权限基础上增加权限<code class="highlighter-rouge">+</code>, 移除权限<code class="highlighter-rouge">-</code>，或将权限设置为后面的值<code class="highlighter-rouge">=</code></p>
+
+<p>第三个符号代表设置的权限，常见的为<code class="highlighter-rouge">rwx</code>。</p>
+
+<p>给<code class="highlighter-rouge">test.txt</code>文件的其它用户增加读权限。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">chmod </span>o+r test.txt
+<span class="nb">ls</span> <span class="nt">-l</span> test.txt
+
+<span class="nt">-rwxrw-r--</span> 2 learn-linux learn-linux 19 9月  17 11:41 test.txt
+</code></pre></div></div>
+
+<h3 id="改变所属关系">改变所属关系</h3>
+
+<p><code class="highlighter-rouge">chown</code>用于改变文件属主和属主，<code class="highlighter-rouge">chgrp</code>用于改变文件的属组，<code class="highlighter-rouge">-R</code>选项用于递归改变目录及其子文件</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">ls</span> <span class="nt">-al</span> test.txt
+
+<span class="nt">-rwxrw-r--</span> 2 learn-linux learn-linux 19 9月  17 11:41 test.txt
+
+<span class="c">#将test.txt文件属主更改为root，属组更改为root</span>
+<span class="nb">chown </span>root:root test.txt
+<span class="nb">ls</span> <span class="nt">-al</span> test.txt
+
+<span class="nt">-rwxrw-r--</span> 2 root root 19 9月  17 11:41 test.txt
+
+<span class="c">#将test.txt文件属组更改为test</span>
+<span class="nb">chgrp </span>learn-linux test.txt
+<span class="nb">ls</span> <span class="nt">-al</span> test.txt
+
+<span class="nt">-rwxrw-r--</span> 2 root learn-linux 19 9月  17 11:41 test.txt
+</code></pre></div></div>
+
+<p>Tips：</p>
+
+<p>当出现<code class="highlighter-rouge">Operation not permitted</code> error时，使用<code class="highlighter-rouge">sudo</code>提升权限。</p>
+:ET

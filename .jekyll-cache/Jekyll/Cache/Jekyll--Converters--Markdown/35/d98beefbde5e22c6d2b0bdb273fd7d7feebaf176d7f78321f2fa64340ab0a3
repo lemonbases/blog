@@ -1,0 +1,192 @@
+I"I<blockquote>
+  <p>我们不生产数据，只是数据的搬运工。</p>
+</blockquote>
+
+<p>在进行生物数据分析之前，有必要先了解一下常见的生物数据格式，不然可能会犯一些意料不到的错误。</p>
+
+<p>常见的生物数据格式有：</p>
+
+<ul>
+  <li>FASTA</li>
+  <li>FASTQ</li>
+  <li>GFF/GTF/BED/…</li>
+  <li>VCF</li>
+  <li>SAM/BAM</li>
+</ul>
+
+<p><img src="https://ae01.alicdn.com/kf/H7e8b085c89fa49f1b33602844981ce21D.png" alt="ngs_map_read_file_formats.png" style="zoom:36%;" /></p>
+
+<h3 id="fasta">FASTA</h3>
+
+<p>记录DNA/Protein序列的文本格式，其由两部分组成:</p>
+<ul>
+  <li>描述行，以<code class="highlighter-rouge">&gt;</code>起始，记录序列ID，名称或注释信息</li>
+  <li>序列数据，一般为大写格式
+    <pre><code class="language-{bash,eval=FALSE,echo=TRUE}">&gt;gi|31563518|ref|NP_852610.1| microtubule-associated proteins 1A/1B light chain 3A isoform b [Homo sapiens]
+MKMRFFSSPCGKAAVDPADRCKEVQQIRDQHPSKIPVIIERYKGEKQLPVLDKTKFLVPDHVNMSELVKI
+IRRRLQLNPTQAFFLLVNQHSMVSVSTPIADIYEQEKDEDGFLYMVYASQETFGFIRENE
+</code></pre>
+    <p>有些从Ensembl下载的基因组数据中，序列中包含小写字母或<code class="highlighter-rouge">N</code>，这是因为基因组文件中包含大量的重复序列，<code class="highlighter-rouge">soft-mask</code>将重复序列从大写字母表示转化为小写字母表示；<code class="highlighter-rouge">hard-mask</code>将重复序列转化为<code class="highlighter-rouge">N</code>s。</p>
+  </li>
+</ul>
+
+<h3 id="fastq">FASTQ</h3>
+
+<p>记录测序序列及其质量得分的文本格式，序列与质量得分用单个ASCII字符表示。</p>
+
+<p>Phred64编码格式，碱基质量值为字符的十进制ASCII码减去64</p>
+
+<p>Phred32编码格式，碱基质量值为字符的十进制ASCII码减去32</p>
+
+<p>通常一个序列由4行组成：</p>
+
+<ol>
+  <li>以<code class="highlighter-rouge">@</code>开头，之后为序列的ID及描述信息(与fasta格式的描述行类似);</li>
+  <li>序列信息;</li>
+  <li>以<code class="highlighter-rouge">+</code>开头，之后可以再加上序列的ID及描述信息(可选);</li>
+  <li>质量得分，与第二行长度相同。</li>
+</ol>
+
+<pre><code class="language-{bash,eval=FALSE,echo=TRUE}">@SEQ_ID
+GATTTGGGGTTCAAAGCAGTATCGATCAAATAGTAAATCCATTTGTTCAACTCACAGTTT
++
+!''*((((***+))%%%++)(%%%%).1***-+*''))**55CCF&gt;&gt;&gt;&gt;&gt;&gt;CCCCCCC65
+</code></pre>
+
+<h4 id="illumina序列标识符">Illumina序列标识符</h4>
+
+<pre><code class="language-{bash,eval=FALSE,echo=TRUE}">@HWUSI-EAS100R:6:73:941:1973#0/1
+</code></pre>
+
+<table>
+  <thead>
+    <tr>
+      <th>HWUSI-EAS100R</th>
+      <th>the unique instrument name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>6</td>
+      <td>flowcell lane</td>
+    </tr>
+    <tr>
+      <td>73</td>
+      <td>tile number within the flowcell lane</td>
+    </tr>
+    <tr>
+      <td>941</td>
+      <td>‘x’-coordinate of the cluster within the tile</td>
+    </tr>
+    <tr>
+      <td>1973</td>
+      <td>‘y’-coordinate of the cluster within the tile</td>
+    </tr>
+    <tr>
+      <td>#0</td>
+      <td>index number for a multiplexed sample (0 for no indexing)</td>
+    </tr>
+    <tr>
+      <td>/1</td>
+      <td>the member of a pair, /1 or /2 <em>(paired-end or mate-pair reads only)</em></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Illumina 1.4之后multiplex ID使用<code class="highlighter-rouge">#NNNNNN</code>替代<code class="highlighter-rouge">#0</code>，<code class="highlighter-rouge">#NNNNNN</code>为sequence of the multiplex tag。</p>
+<pre><code class="language-{bash,eval=FALSE,echo=TRUE}">@EAS139:136:FC706VJ:2:2104:15343:197393 1:Y:18:ATCACG
+</code></pre>
+
+<table>
+  <thead>
+    <tr>
+      <th>EAS139</th>
+      <th>the unique instrument name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>136</td>
+      <td>the run id</td>
+    </tr>
+    <tr>
+      <td>FC706VJ</td>
+      <td>the flowcell id</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>flowcell lane</td>
+    </tr>
+    <tr>
+      <td>2104</td>
+      <td>tile number within the flowcell lane</td>
+    </tr>
+    <tr>
+      <td>15343</td>
+      <td>‘x’-coordinate of the cluster within the tile</td>
+    </tr>
+    <tr>
+      <td>197393</td>
+      <td>‘y’-coordinate of the cluster within the tile</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>the member of a pair, 1 or 2 <em>(paired-end or mate-pair reads only)</em></td>
+    </tr>
+    <tr>
+      <td>Y</td>
+      <td>Y if the read is filtered, N otherwise</td>
+    </tr>
+    <tr>
+      <td>18</td>
+      <td>0 when none of the control bits are on, otherwise it is an even number</td>
+    </tr>
+    <tr>
+      <td>ATCACG</td>
+      <td>index sequence</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>最近版本的Illumina输出格式为：</p>
+<pre><code class="language-{bash,eval=FALSE,echo=TRUE}">@EAS139:136:FC706VJ:2:2104:15343:197393 1:N:18:1
+</code></pre>
+
+<h4 id="质量score计算">质量Score计算</h4>
+
+<p>测序仪测序是根据荧光信号强弱给出参考测序错误概率(probability that the corresponding base call is incorrect,P)。</p>
+
+<p>Sanger使用：$Q_{sanger}=-10*\log_{10}P$，其也称为Phred质量得分</p>
+
+<p>Solexa(Illumina Genome Analyzer)使用：$Q_{solexa-prioor to v.1.3}=-10*\log_{10}\frac{P}{1-P}$</p>
+
+<p>二者区别如下图所示：<img src="https://ae01.alicdn.com/kf/Hd03b095bd3af48e89488dd3cb9b22bcfp.png" alt="Probability_metrics.png" /></p>
+
+<h4 id="质量得分编码">质量得分编码</h4>
+
+<p><img src="https://ae01.alicdn.com/kf/H471cbf9fc82a44e686bd043effab413dA.png" alt="score_encoding.png" style="zoom:75%;" /></p>
+
+<h4 id="检测编码类型">检测编码类型</h4>
+
+<p>通过上图，可以做类似这种决策树：</p>
+
+<p>包含字符<code class="highlighter-rouge">0</code>：</p>
+
+<ul>
+  <li>包含字符<code class="highlighter-rouge">J</code>：Illumina 1.8+ Phred33</li>
+  <li>不包含字符<code class="highlighter-rouge">J</code>：Sanger Phred33</li>
+</ul>
+
+<p>不包含字符<code class="highlighter-rouge">0</code>:</p>
+
+<ul>
+  <li>包含字符<code class="highlighter-rouge">=</code>：Solexa Phred64</li>
+  <li>不包含字符<code class="highlighter-rouge">=</code>，包含字符<code class="highlighter-rouge">A</code>：Illumina1.3 Phred64</li>
+  <li>不包含字符<code class="highlighter-rouge">=</code>，不包含字符<code class="highlighter-rouge">A</code>：Illumina1.5 Phred64</li>
+</ul>
+
+<p>可以使用Github的<a href="https://github.com/brentp/bio-playground/blob/master/reads-utils/guess-encoding.py">guess-encoding.py</a>来进行判断</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">gunzip</span> <span class="nt">-c</span> file.fastq.gz | <span class="nb">awk</span> <span class="s1">'NR % 4 == 0'</span> | <span class="nb">head</span> <span class="nt">-n</span> 1000000 | python guess-encoding.py
+</code></pre></div></div>
+:ET

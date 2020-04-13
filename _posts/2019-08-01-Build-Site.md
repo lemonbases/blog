@@ -35,6 +35,9 @@ sudo apt-get install ruby-full build-essential zlib1g-dev
 **2 安装 Jekyll及jekyll-paginate**
 
 ```C-like
+## 更换镜像
+gem sources --add https://gems.ruby-china.com/ --remove https://rubygems.org/
+
 gem install jekyll
 gem install jekyll-paginate
 ```

@@ -1,0 +1,4 @@
+I"<blockquote>
+  <p>Linux核心思想：一切皆文件，统一的名字空间 (unified namespace)：表现形式是文件系统 (filesystem) 的路径；统一的访问接口 (unified interface)：表现形式是 read/write 等标准函数。 – 知乎用户Rio</p>
+</blockquote>
+:ET

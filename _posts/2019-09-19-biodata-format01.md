@@ -1,6 +1,6 @@
 ---
 layout: post
-title: '常见生物数据格式01--FASTA/FASTQ'
+title: '常见生物数据格式01-FASTA/FASTQ'
 date: 2019-09-19
 author: 柠檬菌
 tags: 生物数据格式

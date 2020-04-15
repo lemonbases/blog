@@ -87,6 +87,10 @@ permalink: /:year/:month/:day/:title.html
 # Plugins
 plugins: [jekyll-paginate]
 
+# keep_files
+
+keep_files: ["scRNA.seq.course.CN", ".git"]
+
 # resources
 resources:
   scRNA-seq-data-analysis: '/scRNA.seq.course.CN'
